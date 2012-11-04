@@ -21,16 +21,23 @@
 					<form:hidden path="questionId"/>
 					<fieldset>
 						<div class="control-group">
+							<form:label path="title" />
 							제목 : <form:input path="title" cssClass="input-xlarge focused span7"/>
 						</div>
 						<div class="control-group">
+							<form:label path="contents" />
 							<form:textarea path="contents" cols="80" rows="15"/>
 						</div>
 						<div class="control-group">
+							<form:label path="plainTags" />
 							태그 : <form:input path="plainTags" cssClass="input-xlarge focused span7"/><br/>
 							태그 구분자로 공백 또는 쉼표(,)를 사용할 수 있습니다.
 						</div>
-						
+						<c:if test="${loginUser.facebookUser and empty question.questionId}">
+						<div class="control-group">
+							내 페이스북으로 질문을 보내겠습니까?&nbsp;&nbsp;<form:checkbox path="connected" />
+						</div>
+						</c:if>
 						<div class="pull-right">
 							<button id="confirmBtn" type="submit" class="btn btn-primary">질문하기</button>
 							<a href="/questions" class="btn">목록보기</a>

@@ -111,4 +111,16 @@ public class QuestionTest {
 		dut.setContents(contents);
 		assertThat(dut.getContents(), is(contents));
 	}
+	
+	@Test
+	public void connected() throws Exception {
+		SocialUser loginUser = new SocialUser();
+		loginUser.setProviderId("facebook");
+		dut.writedBy(loginUser);
+		String postId = "123456";
+		SnsConnection actual = dut.connected(postId);
+		
+		SnsConnection expected = new SnsConnection(SnsType.facebook, postId);
+		assertThat(actual, is(expected));
+	}
 }
