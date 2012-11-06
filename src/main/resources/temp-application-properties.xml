@@ -37,6 +37,9 @@
 	<entry key="facebook.clientSecret">clientSecret</entry>
 	<entry key="facebook.accessToken">accessToken</entry>
 	
+	<!-- Facebook 연동 테스트를 위한 accessToken -->
+	<entry key="my.facebook.accessToken"></entry>	
+	
 	<entry key="google.clientId">clientId</entry>
 	<entry key="google.clientSecret">clientSecret</entry>	
 	

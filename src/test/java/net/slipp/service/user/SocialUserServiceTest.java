@@ -3,8 +3,11 @@ package net.slipp.service.user;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+
 import net.slipp.domain.user.ExistedUserException;
-import net.slipp.service.user.SocialUserService;
+import net.slipp.domain.user.SocialUser;
+import net.slipp.repository.user.SocialUserRepository;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +17,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UsersConnectionRepository;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+
+import com.google.common.collect.Lists;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SocialUserServiceTest {
@@ -24,6 +27,9 @@ public class SocialUserServiceTest {
 	
 	@Mock
 	private ConnectionRepository connectionRepository;
+	
+	@Mock
+	private SocialUserRepository socialUserRepository;
 	
 	@Mock
 	private Connection<?> connection;
@@ -35,8 +41,8 @@ public class SocialUserServiceTest {
 	public void createNewSocialUser_availableUserId() throws Exception {
 		String userId = "userId";
 		when(usersConnectionRepository.createConnectionRepository(userId)).thenReturn(connectionRepository);
-		MultiValueMap<String, Connection<?>> connections = new LinkedMultiValueMap<String, Connection<?>>();
-		when(connectionRepository.findAllConnections()).thenReturn(connections);
+		List<SocialUser> socialUsers = Lists.newArrayList();
+		when(socialUserRepository.findsByUserId(userId)).thenReturn(socialUsers);
 		
 		dut.createNewSocialUser(userId, connection);
 		
@@ -47,9 +53,8 @@ public class SocialUserServiceTest {
 	public void createNewSocialUser_notAvailableUserId() throws Exception {
 		String userId = "userId";
 		when(usersConnectionRepository.createConnectionRepository(userId)).thenReturn(connectionRepository);
-		MultiValueMap<String, Connection<?>> connections = new LinkedMultiValueMap<String, Connection<?>>();
-		connections.add("facebook", connection);
-		when(connectionRepository.findAllConnections()).thenReturn(connections);
+		List<SocialUser> socialUsers = Lists.newArrayList(new SocialUser());
+		when(socialUserRepository.findsByUserId(userId)).thenReturn(socialUsers);
 		
 		dut.createNewSocialUser(userId, connection);
 	}
