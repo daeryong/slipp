@@ -22,16 +22,15 @@ $(document).ready(function(){
 	var deleteAnswerUrlPrefix = $deleteAnswerForm.attr("action");
 	$deleteAnswerBtn.click(function() {
 		var deleteAnswerUrl = deleteAnswerUrlPrefix + $(this).data("answerId");
-		$deleteAnswerForm.attr("action", deleteAnswerUrl);
-		$deleteAnswerForm.submit();
+
+		if ( confirm('정말 삭제하시겠습니까?') ) {
+			$deleteAnswerForm.attr("action", deleteAnswerUrl);
+			$deleteAnswerForm.submit();
+		}
+
 		return false;
 	});
-	
-	$(".commentList").hover(function(){
-		$(this).find(".commBtn").show('fast');
-	}, function(){
-		$(this).find(".commBtn").hide('fast');
-	});
+
 	$(".recommentAnswerBtn").on('click', function(){
 		var orgUserId = $(this).data('answer-user-id');
 		var contents = arroundSpace( $('#contents').val(), orgUserId );
@@ -46,8 +45,10 @@ $(document).ready(function(){
 	
 	replaceNicknames();
 	
+	setShowRealSizeImg();
+
 	function replaceNicknames(){
-		$('.cont').each(function(){
+		$('div.doc div.text').each(function(){
 			var cont = $(this).html();
 			for (var key in nickNames) {
 				cont = cont.replace(new RegExp('@' + key, 'gi'), '<a href="'+nickNames[key]+'">'+key+'</a>');
@@ -57,8 +58,8 @@ $(document).ready(function(){
 		});
 	}
 	function addNickNames(){
-		$('.tester').each(function(){
-			nickNames[$(this).text()] = $(this).find('a').attr('href');
+		$('.author-name').each(function(){
+			nickNames[$(this).text()] = $(this).attr('href');
 		});
 	}
 	function arroundSpace(contents, orgUserId){
@@ -69,5 +70,16 @@ $(document).ready(function(){
 		}
 		return contents;
 	}
-	
+	function setShowRealSizeImg() {
+		var images = $('div.doc div.text img');
+		var imageUrl = images.attr('src');
+
+		images.wrap('<a href="'+imageUrl+'" target="_blank"></a>');
+	}
+	$(".likeAnswerBtn").on("click", function(){
+		var answerId = $(this).data("answer-id");
+		var $form = $('#likeAnswerForm');
+		$form.attr("action", $form.attr("action")+"/"+answerId+"/like");
+		$('#likeAnswerForm').submit();
+	});
 });
